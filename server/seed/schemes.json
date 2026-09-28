@@ -1,0 +1,66 @@
+[
+  {
+    "name": "Startup India Seed Fund Scheme (SISFS)",
+    "issuingBody": "DPIIT",
+    "level": "central",
+    "sectorTags": ["tech", "manufacturing", "agriculture", "services"],
+    "businessStageEligibility": ["idea", "mvp"],
+    "eligibilityCriteria": {
+      "minTeamSize": 1,
+      "maxTeamSize": 50,
+      "dpiitRequired": true,
+      "specialCategoryOnly": [],
+      "other": "Must have a scalable business model"
+    },
+    "fundingAmount": {
+      "min": 1000000,
+      "max": 5000000
+    },
+    "fundingType": "grant",
+    "applicationLink": "https://seedfund.startupindia.gov.in/",
+    "description": "Financial assistance to startups for proof of concept, prototype development, product trials, market entry, and commercialization."
+  },
+  {
+    "name": "Women Entrepreneurship Programme (WEP)",
+    "issuingBody": "NITI Aayog",
+    "level": "central",
+    "sectorTags": ["tech", "manufacturing", "agriculture", "services", "other"],
+    "businessStageEligibility": ["idea", "mvp", "early_revenue", "scaling"],
+    "eligibilityCriteria": {
+      "minTeamSize": 1,
+      "maxTeamSize": 100,
+      "dpiitRequired": false,
+      "specialCategoryOnly": ["women"],
+      "other": "Must be 100% women-led"
+    },
+    "fundingAmount": {
+      "min": 500000,
+      "max": 2000000
+    },
+    "fundingType": "subsidy",
+    "applicationLink": "https://wep.gov.in/",
+    "description": "Promoting and supporting women entrepreneurs across India with training, incubation, and direct financial subsidies."
+  },
+  {
+    "name": "Maharashtra State Innovation Society (MSInS) - Startup Grant",
+    "issuingBody": "Govt of Maharashtra",
+    "level": "state",
+    "state": "Maharashtra",
+    "sectorTags": ["tech", "manufacturing"],
+    "businessStageEligibility": ["mvp", "early_revenue"],
+    "eligibilityCriteria": {
+      "minTeamSize": 2,
+      "maxTeamSize": 200,
+      "dpiitRequired": true,
+      "specialCategoryOnly": [],
+      "other": "Must have registered office in Maharashtra"
+    },
+    "fundingAmount": {
+      "min": 500000,
+      "max": 10000000
+    },
+    "fundingType": "grant",
+    "applicationLink": "https://www.msins.in/",
+    "description": "State-level grant to foster innovation-driven entrepreneurship in Maharashtra."
+  }
+]
