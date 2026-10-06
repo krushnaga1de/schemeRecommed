@@ -11,15 +11,22 @@ const Results = () => {
   }
 
   return (
-    <div className="min-h-screen pt-28 pb-16 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-10 animate-slide-up">
-          <h2 className="font-display text-4xl font-bold text-slate-900 mb-4">
-            Your Scheme Matches
-          </h2>
-          <p className="text-slate-600 text-lg">
-            We analyzed your profile and found <span className="font-bold text-primary-600">{recommendations.schemes?.length || 0}</span> schemes you qualify for.
-          </p>
+    <div className="w-full pb-10">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+              Recommended Schemes
+            </h2>
+            <p className="text-slate-500 text-sm font-medium">
+              Based on your startup profile, here are the most relevant schemes for you.
+            </p>
+          </div>
+          <div className="mt-4 md:mt-0 flex gap-3">
+             <Link to="/questionnaire" className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">
+               Edit Profile
+             </Link>
+          </div>
         </div>
 
         {recommendations.schemes?.length === 0 ? (

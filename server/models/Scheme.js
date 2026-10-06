@@ -29,8 +29,8 @@ const schemeSchema = new mongoose.Schema(
       enum: ['idea', 'mvp', 'early_revenue', 'scaling'],
     },
     eligibilityCriteria: {
-      minTeamSize: { type: Number, default: 0 },
-      maxTeamSize: { type: Number, default: 999999 },
+      minTeamSize: { type: Number, default: null },
+      maxTeamSize: { type: Number, default: null },
       dpiitRequired: { type: Boolean, default: false },
       specialCategoryOnly: {
         type: [String],

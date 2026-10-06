@@ -1,56 +1,102 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Heart } from 'lucide-react';
+import api from '../services/api';
+import toast from 'react-hot-toast';
 
-const SchemeCard = ({ scheme, score, explanation }) => {
+const SchemeCard = ({ scheme, score, explanation, initialIsSaved = false }) => {
+  const [isSaved, setIsSaved] = useState(initialIsSaved);
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      const res = await api.post(`/profile/saved-schemes/${scheme._id}`);
+      setIsSaved(res.data.isSaved);
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error('Failed to update saved scheme');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getScoreColor = (matchScore) => {
+    if (matchScore >= 80) return 'bg-blue-50 text-blue-600 border-blue-200';
+    if (matchScore >= 65) return 'bg-emerald-50 text-emerald-600 border-emerald-200';
+    if (matchScore < 50) return 'bg-amber-50 text-amber-600 border-amber-200';
+    return 'bg-blue-50 text-blue-600 border-blue-200';
+  };
+
   return (
-    <div className="glass-card p-6 hover:shadow-2xl transition-all border border-slate-200">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <span className="inline-block px-2 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-md mb-2">
-            {scheme.issuingBody} • {scheme.level.toUpperCase()}
-          </span>
-          <h3 className="text-xl font-bold text-slate-900">{scheme.name}</h3>
-        </div>
-        {score && (
-          <div className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-bold shadow-sm">
-            {score}% Match
-          </div>
-        )}
-      </div>
+    <div className="bg-white rounded-[16px] p-[20px] md:p-[22px] border border-slate-100 shadow-sm hover:shadow-md transition-all grid grid-cols-1 sm:grid-cols-[96px_1fr_150px] gap-4 sm:gap-6 items-stretch w-full">
       
-      <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
-        <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-          <p className="text-slate-500 mb-1 font-medium">Funding Amount</p>
-          <p className="font-semibold text-slate-800">
-            ₹{scheme.fundingAmount.min.toLocaleString()} - ₹{scheme.fundingAmount.max.toLocaleString()}
+      {/* Top row on mobile: Score + Content */}
+      <div className="grid grid-cols-[80px_1fr] gap-4 sm:contents">
+        
+        {/* Score Block */}
+        {score ? (
+          <div className={`col-span-1 flex flex-col items-center justify-center rounded-xl p-3 border ${getScoreColor(score)}`}>
+            <span className="text-2xl sm:text-3xl font-bold">{score}%</span>
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider mt-1 opacity-80 text-center">Match</span>
+          </div>
+        ) : (
+          <div className="hidden sm:block"></div>
+        )}
+
+        {/* Content Block */}
+        <div className={`flex flex-col justify-center min-w-0 ${!score ? 'col-span-2 sm:col-span-1' : 'col-span-1'}`}>
+          <h3 className="text-lg font-bold text-slate-900 leading-tight mb-1 truncate">{scheme.name}</h3>
+          <p className="text-slate-500 text-xs sm:text-sm font-medium mb-2 truncate">{scheme.issuingBody}</p>
+          
+          {/* Badges */}
+          <div className="flex flex-wrap gap-2 mb-2">
+            <span className="bg-rose-50 text-rose-600 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">
+              {scheme.fundingType}
+            </span>
+            {scheme.businessStageEligibility?.map(stage => (
+              <span key={stage} className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">
+                {stage.replace('_', ' ')}
+              </span>
+            ))}
+            <span className="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">
+              {scheme.level === 'central' ? 'All India' : scheme.state}
+            </span>
+          </div>
+
+          {/* Description */}
+          <p className="text-slate-600 text-sm leading-relaxed line-clamp-2 mb-2">
+            {scheme.description}
           </p>
-        </div>
-        <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-          <p className="text-slate-500 mb-1 font-medium">Funding Type</p>
-          <p className="font-semibold text-slate-800 capitalize">{scheme.fundingType}</p>
+          
+          {/* Explanation */}
+          {explanation && (
+            <p className="text-slate-500 text-xs leading-relaxed mt-1">
+              <strong className="text-slate-700 font-semibold">Why this matches:</strong> {explanation}
+            </p>
+          )}
         </div>
       </div>
 
-      <div className="mb-6">
-        <p className="text-slate-600 text-sm line-clamp-2">{scheme.description}</p>
-      </div>
-
-      {explanation && (
-        <div className="bg-primary-50/50 border-l-4 border-primary-500 p-4 rounded-r-lg mb-6">
-          <p className="text-sm text-primary-900 leading-relaxed italic">
-            "{explanation}"
-          </p>
-        </div>
-      )}
-
-      <div className="flex justify-between items-center mt-auto pt-4 border-t border-slate-100">
+      {/* Actions Block */}
+      <div className="flex flex-row sm:flex-col gap-3 justify-center sm:pl-4 sm:border-l border-slate-100 mt-1 sm:mt-0 w-full">
         <a 
           href={scheme.applicationLink} 
           target="_blank" 
           rel="noreferrer"
-          className="text-primary-600 font-semibold hover:text-primary-700 transition-colors flex items-center gap-1 bg-primary-50 px-4 py-2 rounded-lg"
+          className="flex-1 sm:w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg text-sm flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
-          Apply on Official Portal <span aria-hidden="true">&rarr;</span>
+          View Details
         </a>
+        <button 
+          onClick={handleSave}
+          disabled={loading}
+          aria-pressed={isSaved}
+          className={`flex-1 sm:w-full text-center border-2 font-bold py-2.5 px-4 rounded-xl transition-all text-sm flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 ${isSaved ? 'border-rose-100 text-rose-600 bg-rose-50' : 'border-slate-200 text-slate-600 hover:bg-slate-50'} ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+        >
+          <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} /> 
+          {loading ? 'Saving...' : (isSaved ? 'Saved' : 'Save')}
+        </button>
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ const AdminRoute = () => {
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
   if (!user || user.role !== 'admin') {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;

@@ -22,10 +22,22 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     };
     initAuth();
+
+    const handleLogoutEvent = () => {
+      setUser(null);
+      localStorage.removeItem('accessToken');
+    };
+    
+    window.addEventListener('auth:logout', handleLogoutEvent);
+    return () => window.removeEventListener('auth:logout', handleLogoutEvent);
   }, []);
 
   const login = (userData, accessToken) => {
     localStorage.setItem('accessToken', accessToken);
+    setUser(userData);
+  };
+
+  const updateUser = (userData) => {
     setUser(userData);
   };
 
@@ -41,7 +53,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, loading }}>
       {children}
     </AuthContext.Provider>
   );

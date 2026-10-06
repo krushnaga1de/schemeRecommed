@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    savedSchemes: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Scheme'
+    }],
   },
   {
     timestamps: true,

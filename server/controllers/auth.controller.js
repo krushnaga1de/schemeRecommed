@@ -155,3 +155,35 @@ export const getMe = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateMe = async (req, res, next) => {
+  try {
+    const { name, email } = req.body;
+    
+    // We might want to check if the new email is already in use by someone else
+    if (email) {
+      const existingUser = await User.findOne({ email, _id: { $ne: req.user.userId } });
+      if (existingUser) {
+        return res.status(409).json({ success: false, message: 'Email already in use.' });
+      }
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.userId,
+      { $set: { name, email } },
+      { new: true, runValidators: true }
+    ).select('-passwordHash');
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: { user: updatedUser }
+    });
+  } catch (error) {
+    next(error);
+  }
+};

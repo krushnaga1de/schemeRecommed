@@ -24,6 +24,7 @@ const founderProfileSchema = new mongoose.Schema(
     teamSize: {
       type: Number,
       required: true,
+      min: 1,
     },
     fundingNeeded: {
       min: { type: Number, required: true },

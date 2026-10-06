@@ -53,16 +53,22 @@ const Questionnaire = () => {
   };
 
   return (
-    <div className="min-h-screen pt-28 pb-16 px-4">
-      <div className="max-w-2xl mx-auto glass-card p-8 animate-fade-in relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 to-violet-500"></div>
+    <div className="w-full pb-10">
+      <div className="max-w-4xl mx-auto bg-white rounded-2xl p-10 shadow-sm border border-slate-100">
         
-        <div className="text-center mb-8">
-          <h2 className="font-display text-3xl font-bold text-slate-900">Your Business Profile</h2>
-          <p className="text-slate-500 mt-2">Help us find the best matching schemes</p>
+        <div className="mb-10 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+              Startup Profile
+            </h2>
+            <p className="text-slate-500 text-sm font-medium">
+              Help us understand your startup to find the most relevant schemes.
+            </p>
+          </div>
         </div>
-
-        <StepIndicator currentStep={step} totalSteps={2} />
+        <div className="mb-8">
+          <StepIndicator currentStep={step} totalSteps={2} />
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {step === 0 && (
@@ -95,7 +101,7 @@ const Questionnaire = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Team Size</label>
-                  <input type="number" {...register('teamSize')} className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="1" />
+                  <input type="number" min="1" required {...register('teamSize', { required: true })} className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="1" />
                 </div>
               </div>
             </div>
@@ -106,11 +112,11 @@ const Questionnaire = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Min Funding Needed (₹)</label>
-                  <input type="number" {...register('fundingNeeded.min')} className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="500000" />
+                  <input type="number" min="0" required {...register('fundingNeeded.min', { required: true })} className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="500000" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Max Funding Needed (₹)</label>
-                  <input type="number" {...register('fundingNeeded.max')} className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="2000000" />
+                  <input type="number" min="0" required {...register('fundingNeeded.max', { required: true })} className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="2000000" />
                 </div>
               </div>
 
@@ -171,7 +177,7 @@ const Questionnaire = () => {
                    Analyzing...
                 </>
               ) : (
-                step === 0 ? 'Next Step &rarr;' : 'Get Matches \u2728'
+                step === 0 ? 'Next Step' : 'Get Matches \u2728'
               )}
             </button>
           </div>

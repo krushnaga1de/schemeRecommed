@@ -7,21 +7,27 @@ import SchemeCard from '../components/SchemeCard';
 const Dashboard = () => {
   const { user } = useAuth();
   const [history, setHistory] = useState([]);
+  const [savedSchemes, setSavedSchemes] = useState(new Set());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/recommend/history')
-      .then(res => {
-        setHistory(res.data.data.history);
+    Promise.all([
+      api.get('/recommend/history'),
+      api.get('/profile/saved-schemes')
+    ])
+      .then(([historyRes, savedRes]) => {
+        setHistory(historyRes.data.data.history);
+        const savedIds = new Set(savedRes.data.data.schemes.map(s => s._id));
+        setSavedSchemes(savedIds);
       })
       .catch(e => console.error(e))
       .finally(() => setLoading(false));
   }, []);
 
   return (
-    <div className="min-h-screen pt-28 pb-16 px-4">
+    <div className="w-full pb-10">
       <div className="max-w-5xl mx-auto">
-        <div className="flex flex-col md:flex-row md:justify-between items-start md:items-end mb-10 border-b border-slate-200 pb-6 gap-4">
+        <div className="flex flex-col md:flex-row md:justify-between items-start md:items-end mb-10 pb-6 gap-4">
           <div>
             <h1 className="font-display text-3xl font-bold text-slate-900">Welcome, {user?.name.split(' ')[0]}</h1>
             <p className="text-slate-500 mt-1">Manage your profile and past recommendations</p>
@@ -56,20 +62,21 @@ const Dashboard = () => {
                     Matches from {new Date(run.generatedAt).toLocaleDateString()}
                   </h3>
                   <span className="text-xs font-bold bg-indigo-100 text-indigo-700 px-2 py-1 rounded">
-                    {run.recommendedSchemes.length} schemes found
+                    {run.recommendedSchemes.length} scheme{run.recommendedSchemes.length !== 1 ? 's' : ''} found
                   </span>
                 </div>
                 
                 {run.recommendedSchemes.length === 0 ? (
                   <p className="text-slate-500 italic bg-slate-50 p-4 rounded-lg border border-slate-100 text-center">No matching schemes were found during this run.</p>
                 ) : (
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="flex flex-col gap-[14px]">
                     {run.recommendedSchemes.map(rs => (
                       <SchemeCard 
                         key={rs.schemeId?._id || rs._id} 
                         scheme={rs.schemeId} 
                         score={rs.matchScore} 
                         explanation={rs.explanation} 
+                        initialIsSaved={savedSchemes.has(rs.schemeId?._id)} 
                       />
                     ))}
                   </div>
